@@ -1,0 +1,91 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: manual
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Delete
+
+# PersistentVolume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: oauth-v1-pv
+  namespace: {{ .Values.Namespace }}
+spec:
+  capacity:
+    storage: {{ .Values.Storage }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "{{ .Values.Path }}"
+
+# PersistentVolumeClaim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.PVCName }}  # Updated key name
+  namespace: {{ .Values.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.Storage }} 
+  storageClassName: manual 
+
+# StatefulSet
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.StatefulName }}  # Updated key name
+  namespace: {{ .Values.Namespace }}
+spec:
+  replicas: {{ .Values.ReplicaCount }}
+  serviceName: {{ .Values.ServiceName }}  # Updated key name
+  selector:
+    matchLabels:
+      app: {{ .Values.StatefulName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.StatefulName }}
+    spec:
+      containers:
+      - name: {{ .Values.StatefulName }}
+        image: {{ .Values.ImageName }}
+        ports:
+        - containerPort: {{ .Values.ContainerPort }}
+          mountPath: {{ .Values.Path }}
+      tolerations:
+        - key: {{ .Values.Tolerationskey }}
+          operator: {{ .Values.Operator }}
+          value: {{ .Values.Tolerationsvalue }}
+          effect: {{ .Values.Effect }}
+      volumes:
+      - name: oauth-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.PVCName }}  # Updated key name
+
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.ServiceName }}  # Updated key name
+  namespace: {{ .Values.Namespace }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Values.StatefulName }}
+  ports:
+    - port: {{ .Values.Port }}
+      targetPort: {{ .Values.TargetPort }}
+

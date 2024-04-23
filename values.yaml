@@ -1,0 +1,20 @@
+PVCName: oauth-v1-pvc  
+Namespace: oauth-v1
+Storage: 30Gi
+
+# StatefulSet
+StatefulName: oauth-v1  
+ReplicaCount: 3
+ImageName: 310146160491.dkr.ecr.us-west-1.amazonaws.com/oauth:latest
+ContainerPort: 80
+
+#Tolerations
+Tolerationskey: app
+Operator: Equal
+Tolerationsvalue: oauth
+Effect: NoSchedule
+# Services
+ServiceName: oauth-v1-service  # Updated key name
+Port: 80
+TargetPort: 80
+Path: "/tmp"
