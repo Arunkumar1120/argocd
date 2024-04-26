@@ -82,7 +82,7 @@ metadata:
   name: {{ .Values.ServiceName }}  # Updated key name
   namespace: {{ .Values.Namespace }}
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: {{ .Values.StatefulName }}
   ports:
