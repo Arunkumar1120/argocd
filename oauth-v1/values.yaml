@@ -12,7 +12,7 @@ ContainerPort: 80
 Tolerationskey: app
 Operator: Equal
 Tolerationsvalue: oauth
-Effect: NoSchedule
+Effect: PreferNoSchedule
 # Services
 ServiceName: oauth-v1-service  # Updated key name
 Port: 80
