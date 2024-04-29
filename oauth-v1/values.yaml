@@ -5,7 +5,7 @@ Storage: 30Gi
 # StatefulSet
 StatefulName: oauth-v1  
 ReplicaCount: 3
-ImageName: 975050154822.dkr.ecr.us-west-1.amazonaws.com/oauth:latest
+ImageName: 599690875663.dkr.ecr.us-west-1.amazonaws.com/testoauth
 ContainerPort: 80
 
 #Tolerations
