@@ -64,7 +64,7 @@ spec:
         image: {{ .Values.ImageName }}
         ports:
         - containerPort: {{ .Values.ContainerPort }}
-          mountPath: {{ .Values.Path }}
+          mountPath: {{ .Values.ContainerPath }}
       tolerations:
         - key: {{ .Values.Tolerationskey }}
           operator: {{ .Values.Operator }}
