@@ -18,3 +18,4 @@ ServiceName: oauth-v1-service  # Updated key name
 Port: 80
 TargetPort: 80
 Path: "/tmp"
+ContainerPath: "/app"
